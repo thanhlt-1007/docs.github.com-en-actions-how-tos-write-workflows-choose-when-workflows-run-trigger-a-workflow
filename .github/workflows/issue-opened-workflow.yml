@@ -1,0 +1,23 @@
+name: issue-opened-workflow
+
+on:
+  issues:
+    types:
+        - opened
+
+jobs:
+  issue-opened-workflow-echo:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - run: echo "issue-opened-workflow is ${{ job.status }}"
+
+      - name: Add triage label to new issues
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_HTML_URL: ${{ github.event.issue.html_url }}
+        run: |
+          gh issue edit $ISSUE_HTML_URL --add-label "triage"
+
+      - run: echo "issue-opened-workflow is ${{ job.status }}"
